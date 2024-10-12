@@ -1,0 +1,23 @@
+<!-- res/values/styles.xml -->
+<resources>
+
+    <style name="Theme.MyApp.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/lightPrimary</item>
+        <item name="colorSecondary">@color/lightSecondary</item>
+        <item name="colorAccent">@color/lightAccent</item>
+        <item name="android:textColor">@color/lightText</item>
+        <item name="android:windowBackground">@color/lightBackground</item>
+
+        <item name="buttonStyle">@style/Widget.MaterialComponents.Button</item>
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+    </style>
+
+    <style name="Theme.MyApp.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorSecondary">@color/darkSecondary</item>
+        <item name="colorAccent">@color/darkAccent</item>
+        <item name="android:textColor">@color/darkText</item>
+        <item name="android:windowBackground">@color/darkBackground</item>
+    </style>
+
+</resources>
