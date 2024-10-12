@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.seatsense.LoginActivity;
-
 import java.io.IOException;
 
 import okhttp3.Call;
