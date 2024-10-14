@@ -3,38 +3,60 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center">
+    android:padding="16dp"
+    android:gravity="left">
+
+    <ImageView
+        android:id="@+id/my_image_view"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80sp"
+        android:contentDescription="@string/logo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ss_logo" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register Yourself"
+        android:gravity="center"
         android:padding="16dp"
-        android:gravity="center" />
+        android:text="Register"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="12dp"
+        android:text="Login"
+        android:textColor="@color/lightText"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/first_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="First Name"
-        android:gravity="center"/>
+        android:gravity="left"/>
 
     <EditText
         android:id="@+id/last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Last Name"
-        android:gravity="center"/>
+        android:gravity="left"/>
 
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
-        android:gravity="center"/>
+        android:gravity="left"/>
 
     <EditText
         android:id="@+id/password"
@@ -42,7 +64,7 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
-        android:gravity="center"/>
+        android:gravity="left"/>
 
     <EditText
         android:id="@+id/confirm_password"
@@ -50,13 +72,15 @@
         android:layout_height="wrap_content"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        android:gravity="center"/>
+        android:gravity="left"/>
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button"/>
 
 </LinearLayout>

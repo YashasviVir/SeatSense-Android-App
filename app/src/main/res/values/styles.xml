@@ -7,9 +7,6 @@
         <item name="colorAccent">@color/lightAccent</item>
         <item name="android:textColor">@color/lightText</item>
         <item name="android:windowBackground">@color/lightBackground</item>
-
-        <item name="buttonStyle">@style/Widget.MaterialComponents.Button</item>
-        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
     </style>
 
     <style name="Theme.MyApp.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">

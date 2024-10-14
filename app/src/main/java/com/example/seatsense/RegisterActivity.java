@@ -2,8 +2,10 @@ package com.example.seatsense;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
-
+    private TextView loginTextView;
     private final OkHttpClient client = new OkHttpClient();  // OkHttp client for making network requests
 
     @Override
@@ -40,6 +42,15 @@ public class RegisterActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirm_password);
         Button registerButton = findViewById(R.id.register_button);
+        loginTextView = findViewById(R.id.login);
+
+
+        // Login text functionality
+        loginTextView.setOnClickListener(v -> {
+            // Redirect to RegisterActivity
+            Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        });
 
         // Handle the register button click
         registerButton.setOnClickListener(v -> {
@@ -63,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser(String firstName, String lastName, String email, String password) {
-        String url = "http://192.168.177.2:8000/signup";  // Replace with your API URL
+        String url = "http://192.168.0.102:8000/signup";  // Replace with your API URL
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
         // Create JSON body with user data

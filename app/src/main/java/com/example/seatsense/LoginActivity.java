@@ -61,10 +61,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password) {
-        String url = "http://192.168.177.22:8000/login";  // Replace with your API URL
+        String url = "http://192.168.0.102:8000/login";  // Replace with your API URL
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        String jsonBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+        String jsonBody = "{\"email\":\"" + username + "\",\"password\":\"" + password + "\"}";
         RequestBody body = RequestBody.create(JSON, jsonBody);
 
         Request request = new Request.Builder()
