@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.tracing.perfetto.handshake)
     ///implementation(libs.mediation.test.suite)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

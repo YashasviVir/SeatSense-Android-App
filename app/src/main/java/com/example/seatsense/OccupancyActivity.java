@@ -1,6 +1,11 @@
 package com.example.seatsense;
 
+import static com.example.seatsense.utils.NetworkUtils.BASE_WEBSOCKET_URL;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Toast;
@@ -10,9 +15,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okhttp3.Response;
+import okio.ByteString;
+
 public class OccupancyActivity extends AppCompatActivity {
 
     private GridLayout seatGridLayout;
+    private WebSocket webSocket;
+    private static final String TOKEN_KEY = "auth_token";
+    private static final String PREFS_NAME = "MyAppPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,62 +44,129 @@ public class OccupancyActivity extends AppCompatActivity {
         seatGridLayout = findViewById(R.id.seatGridLayout);
         seatGridLayout.setColumnCount(10);  // Set the grid layout to 10 columns
 
-        // Dummy JSON data
-        String jsonData = "{\"a1\":\"false\", \"a2\":\"true\", \"a3\":\"true\", \"a4\":\"false\", \"a5\":\"true\", " +
-                "\"a6\":\"false\", \"a7\":\"true\", \"a8\":\"false\", \"a9\":\"true\", \"a10\":\"false\", " +
-                "\"b1\":\"false\", \"b2\":\"true\", \"b3\":\"false\", \"b4\":\"true\", \"b5\":\"false\", " +
-                "\"b6\":\"true\", \"b7\":\"false\", \"b8\":\"true\", \"b9\":\"false\", \"b10\":\"true\", " +
-                "\"c1\":\"true\", \"c2\":\"false\", \"c3\":\"true\", \"c4\":\"false\", \"c5\":\"true\", " +
-                "\"c6\":\"false\", \"c7\":\"true\", \"c8\":\"false\", \"c9\":\"true\", \"c10\":\"false\", " +
-                "\"d1\":\"false\", \"d2\":\"true\", \"d3\":\"false\", \"d4\":\"true\", \"d5\":\"false\", " +
-                "\"d6\":\"true\", \"d7\":\"false\", \"d8\":\"true\", \"d9\":\"false\", \"d10\":\"true\", " +
-                "\"e1\":\"true\", \"e2\":\"false\", \"e3\":\"true\", \"e4\":\"false\", \"e5\":\"true\", " +
-                "\"e6\":\"false\", \"e7\":\"true\", \"e8\":\"false\", \"e9\":\"true\", \"e10\":\"false\", " +
-                "\"f1\":\"false\", \"f2\":\"true\", \"f3\":\"false\", \"f4\":\"true\", \"f5\":\"false\", " +
-                "\"f6\":\"true\", \"f7\":\"false\", \"f8\":\"true\", \"f9\":\"false\", \"f10\":\"true\", " +
-                "\"g1\":\"true\", \"g2\":\"false\", \"g3\":\"true\", \"g4\":\"false\", \"g5\":\"true\", " +
-                "\"g6\":\"false\", \"g7\":\"true\", \"g8\":\"false\", \"g9\":\"true\", \"g10\":\"false\", " +
-                "\"h1\":\"false\", \"h2\":\"true\", \"h3\":\"false\", \"h4\":\"true\", \"h5\":\"false\", " +
-                "\"h6\":\"true\", \"h7\":\"false\", \"h8\":\"true\", \"h9\":\"false\", \"h10\":\"true\", " +
-                "\"i1\":\"true\", \"i2\":\"false\", \"i3\":\"true\", \"i4\":\"false\", \"i5\":\"true\", " +
-                "\"i6\":\"false\", \"i7\":\"true\", \"i8\":\"false\", \"i9\":\"true\", \"i10\":\"false\", " +
-                "\"j1\":\"false\", \"j2\":\"true\", \"j3\":\"false\", \"j4\":\"true\", \"j5\":\"false\", " +
-                "\"j6\":\"true\", \"j7\":\"false\", \"j8\":\"true\", \"j9\":\"false\", \"j10\":\"true\"}";
-
-        // Simulate parsing the JSON and creating the seat layout
-        createSeatLayout(jsonData);
+        startWebSocketConnection();
     }
 
-    private void createSeatLayout(String jsonData) {
-        try {
-            JSONObject jsonObject = new JSONObject(jsonData);
+    private void startWebSocketConnection() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(0, TimeUnit.MILLISECONDS)  // No timeout for WebSocket
+                .build();
 
-            // Loop from row 'j' to 'a' (reverse order)
-            for (char row = 'j'; row >= 'a'; row--) {
-                for (int seatNumber = 1; seatNumber <= 10; seatNumber++) {
-                    String seatId = String.valueOf(row) + seatNumber;
-                    boolean isOccupied = jsonObject.getBoolean(seatId);
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String token = preferences.getString(TOKEN_KEY, null);
+
+        Request request = new Request.Builder()
+                .url(BASE_WEBSOCKET_URL + "/ws?token=" + token)  // Replace with your WebSocket URL
+                .build();
+
+        webSocket = client.newWebSocket(request, new WebSocketListener() {
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                Log.d("WebSocket", "Connection opened");
+//                webSocket.send("Hello, Server!");  // Example of sending a message
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, String text) {
+                Log.d("WebSocket", "Received message: " + text);
+                runOnUiThread(() -> updateSeatLayout(text));  // Update UI on the main thread
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, ByteString bytes) {
+                Log.d("WebSocket", "Received binary message");
+            }
+
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                Log.d("WebSocket", "Closing: " + reason);
+                webSocket.close(1000, null);
+                finish();
+            }
+
+            @Override
+            public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+                Log.e("WebSocket", "Connection failed", t);
+                finish();
+            }
+        });
+
+        client.dispatcher().executorService().shutdown();
+    }
+
+//    JSONObject jsonObject = new JSONObject(jsonData);
+
+    private void updateSeatLayout(String jsonData) {
+        try {
+            JSONObject occupancyData = new JSONObject(jsonData);
+
+            seatGridLayout.removeAllViews();
+
+            // Create a map to group seats by row
+            Map<String, List<String>> seatMap = new HashMap<>();
+
+            // Find all seat identifiers in the JSON
+            for (Iterator<String> it = occupancyData.keys(); it.hasNext(); ) {
+                String seatId = it.next();
+                String row = seatId.replaceAll("\\d+", "");  // Extract the row letter (e.g., A, B, C)
+
+                if (!seatMap.containsKey(row)) {
+                    seatMap.put(row, new ArrayList<>());  // Initialize the list for a new row
+                }
+                seatMap.get(row).add(seatId);  // Add seat to its row
+            }
+
+            // Determine the maximum number of seats in any row
+            int maxSeats = 0;
+            for (List<String> rowSeats : seatMap.values()) {
+                maxSeats = Math.max(maxSeats, rowSeats.size());
+            }
+
+            // Set the column count based on the maxSeats
+            seatGridLayout.setColumnCount(maxSeats);
+
+            // Loop through the rows and add buttons dynamically
+            for (String row : seatMap.keySet()) {
+                List<String> seatsInRow = seatMap.get(row);
+
+                // Add buttons for each seat in the row
+                for (String seatId : seatsInRow) {
+                    int isOccupied = occupancyData.getInt(seatId);  // Get the occupancy status
 
                     Button seatButton = new Button(this);
                     seatButton.setText(seatId);
+
                     GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                    params.width = (int) (getResources().getDimension(R.dimen.button_width) / 2); // Use half the width
+                    params.width = (int) (getResources().getDimension(R.dimen.button_width) / 2);  // Adjust button width
                     params.height = GridLayout.LayoutParams.WRAP_CONTENT;
+
                     seatButton.setLayoutParams(params);
 
-                    // Set different colors based on occupancy status
-                    if (isOccupied) {
-                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark)); // Occupied
+                    if (isOccupied == 1) {
+                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));  // Occupied
                     } else {
-                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light)); // Available
+                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));  // Available
                     }
 
                     seatGridLayout.addView(seatButton);
                 }
+
+                // Fill up any empty seats in the row to align with maxSeats
+                for (int i = seatsInRow.size(); i < maxSeats; i++) {
+                    Button emptyButton = new Button(this);
+                    emptyButton.setVisibility(View.INVISIBLE);
+                    seatGridLayout.addView(emptyButton);
+                }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("Occupancy", e.getMessage());
             Toast.makeText(this, "Error parsing JSON data", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webSocket.close(1000, null);
     }
 }
