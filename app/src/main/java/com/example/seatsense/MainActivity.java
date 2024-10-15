@@ -34,15 +34,13 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
         if (token == null) {
-
             // No token, redirect to login screen
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
-
         } else {
             // Token exists, redirect to home screen
-            Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
+            Intent homeIntent = new Intent(MainActivity.this, OccupancyActivity.class);
             startActivity(homeIntent);
             finish();
         }

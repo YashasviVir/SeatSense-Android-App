@@ -1,6 +1,7 @@
 package com.example.seatsense;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.seatsense.services.Auth;
 
 import java.io.IOException;
 
@@ -28,7 +31,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
     private TextView loginTextView;
-    private final OkHttpClient client = new OkHttpClient();  // OkHttp client for making network requests
+
+    private static final String TOKEN_KEY = "auth_token";
+    private static final String PREFS_NAME = "MyAppPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,51 +72,24 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!password.equals(confirmPassword)) {
                 Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             } else {
-                // Send registration data to the server
-                registerUser(firstName, lastName, email, password);
-            }
-        });
-    }
+                Auth.makeSignUpRequest(firstName, lastName, email, password, new Auth.SignUpCallback() {
+                    @Override
+                    public void onSuccess(String token) {
+                        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(TOKEN_KEY, token);
+                        editor.apply();
 
-    private void registerUser(String firstName, String lastName, String email, String password) {
-        String url = "http://192.168.0.102:8000/signup";  // Replace with your API URL
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                        Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        Intent homeIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                        startActivity(homeIntent);
+                    }
 
-        // Create JSON body with user data
-        String jsonBody = "{\"first_name\":\"" + firstName + "\","
-                + "\"last_name\":\"" + lastName + "\","
-                + "\"email\":\"" + email + "\","
-                + "\"password\":\"" + password + "\"}";
-        RequestBody body = RequestBody.create(JSON, jsonBody);
-
-        // Create request
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
-        // Make asynchronous network call
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace(); // Log the error to check for issues
-                runOnUiThread(() -> System.out.println("Registration Failed: " + e.getMessage()));
-            }
-
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    // Registration successful
-                    runOnUiThread(() -> {
-                        Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                        Intent loginIntent = new Intent(RegisterActivity.this, OccupancyActivity.class);
-                        startActivity(loginIntent);
-                        finish();
-                    });
-                } else {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Failed: " + response.message(), Toast.LENGTH_SHORT).show());
-                }
+                    @Override
+                    public void onError(int errorCode, String errorMessage) {
+                        Toast.makeText(RegisterActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
