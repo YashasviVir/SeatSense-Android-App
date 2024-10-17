@@ -7,11 +7,12 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/lightPrimary"
             app:title="Seat Sense"
@@ -23,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -33,13 +33,39 @@
             android:text="Click below to view occupancy"
             android:textSize="20sp"/>
 
-        <Button
-            android:id="@+id/viewOccupancyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <FrameLayout
+            android:id="@+id/occupancyLayoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
             android:layout_marginTop="15dp"
-            android:text="View Occupancy"
-            android:background="@drawable/button"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <!-- ImageView -->
+            <ImageView
+                android:id="@+id/occupancyImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/audi"
+                android:scaleType="centerCrop" />
+
+            <!-- Dark overlay (semi-transparent view) -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80000000" />  <!-- Adjust this value for different levels of darkness -->
+
+            <!-- TextView -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="View Occupancy"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -50,11 +76,20 @@
 
         <Button
             android:id="@+id/viewAttendance"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="15dp"
+            android:text="View Attendance"
+            app:cornerRadius="10dp" />
+
+        <Button
+            android:id="@+id/logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="View Attendance"
-            android:background="@drawable/button"/>
+            android:backgroundTint="#FF5454"
+            android:text="Logout"
+            app:cornerRadius="10dp" />
 
     </LinearLayout>
 
