@@ -131,15 +131,17 @@ public class OccupancyActivity extends AppCompatActivity {
 
                 // Add buttons for each seat in the row
                 for (String seatId : seatsInRow) {
-                    int isOccupied = occupancyData.getInt(seatId);  // Get the occupancy status
+                    int isOccupied = occupancyData.getInt(seatId);
 
                     Button seatButton = new Button(this);
                     seatButton.setText(seatId);
 
                     GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                    params.width = (int) (getResources().getDimension(R.dimen.button_width) / 2);  // Adjust button width
+//                    params.width = (int) (getResources().getDimension(R.dimen.button_width) / 2);  // Adjust button width
+                    params.width = 250;
                     params.height = GridLayout.LayoutParams.WRAP_CONTENT;
 
+//                    seatButton.setWidth(100);
                     seatButton.setLayoutParams(params);
 
                     if (isOccupied == 1) {
