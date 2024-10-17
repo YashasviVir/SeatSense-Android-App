@@ -54,9 +54,9 @@ public class AttendanceActivity extends AppCompatActivity {
     private void loadDummyData() {
         try {
             // Dummy JSON data for two dates
-            String jsonStr = "[{\"name\":\"John Doe\",\"enrollment\":\"12345\",\"timestamp\":\"10:00 AM\",\"date\":\"2024-10-16\"},"
-                    + "{\"name\":\"Jane Smith\",\"enrollment\":\"12346\",\"timestamp\":\"10:05 AM\",\"date\":\"2024-10-16\"},"
-                    + "{\"name\":\"Alice Brown\",\"enrollment\":\"12347\",\"timestamp\":\"09:00 AM\",\"date\":\"2024-10-17\"}]";
+            String jsonStr = "[{\"name\":\"Yashasvi Virani\",\"enrollment\":\"21BT04136\",\"timestamp\":\"10:00 AM\",\"date\":\"2024-10-16\"},"
+                    + "{\"name\":\"Nayan Radadiya\",\"enrollment\":\"21BT04099\",\"timestamp\":\"10:05 AM\",\"date\":\"2024-10-16\"},"
+                    + "{\"name\":\"Khushi Panchal\",\"enrollment\":\"21BT04038\",\"timestamp\":\"09:00 AM\",\"date\":\"2024-10-17\"}]";
 
             JSONArray jsonArray = new JSONArray(jsonStr);
             for (int i = 0; i < jsonArray.length(); i++) {
