@@ -12,11 +12,22 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/lightPrimary"
             app:title="Seat Sense"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@android:color/white">
+
+            <!-- Add Profile Icon here -->
+            <ImageView
+                android:id="@+id/profileIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="10dp"
+                android:src="@drawable/ic_profile" /> <!-- Replace with your actual drawable -->
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -74,22 +85,39 @@
             android:layout_marginTop="30dp"
             android:textSize="20sp"/>
 
-        <Button
-            android:id="@+id/viewAttendance"
+        <FrameLayout
+            android:id="@+id/attendanceLayoutButton"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_marginTop="15dp"
-            android:text="View Attendance"
-            app:cornerRadius="10dp" />
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:backgroundTint="#FF5454"
-            android:text="Logout"
-            app:cornerRadius="10dp" />
+            <!-- ImageView -->
+            <ImageView
+                android:id="@+id/attendanceImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/audi_filled"
+                android:scaleType="centerCrop" />
+
+            <!-- Dark overlay (semi-transparent view) -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80000000" />  <!-- Adjust this value for different levels of darkness -->
+
+            <!-- TextView -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="View Attendance"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
     </LinearLayout>
 
