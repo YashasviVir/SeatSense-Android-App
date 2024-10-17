@@ -3,6 +3,7 @@ package com.example.seatsense;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import com.example.seatsense.AttendanceActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
