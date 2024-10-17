@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import com.example.seatsense.AttendanceActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
